@@ -1,8 +1,5 @@
 import React, { useState, useEffect } from "react";
-import authAxios from "../../lib/http";
-import Cookies from "js-cookie";
-import axios from "axios";
-import "../allrouteStyle/style.scss";
+import "../commonStyle/style.scss";
 import {
   Table,
   Button,
@@ -10,17 +7,16 @@ import {
   Modal,
   Row,
   Col,
-  ButtonGroup,
-  DropdownButton,
-  Dropdown,
   Alert,
-  ToggleButtonGroup,
-  ToggleButton,
   Spinner,
 } from "react-bootstrap";
 import Pagination from "react-bootstrap-4-pagination";
+import NewStudent from "./NewStudentHandler";
+import TotalStudents from "./FetchTotalStudents";
+import DepartmentsDetails from "./FetchDepartmentsDetails";
+import StudentsDetails from "./FetchStudentsDetails";
 
-const StudentList = () => {
+const StudentList = ({ userTitle }) => {
   const [data, setData] = useState(null);
   const [newModal, setNewModal] = useState(false);
   const [firstname, setFirstname] = useState("");
@@ -40,153 +36,27 @@ const StudentList = () => {
   const [failure, setFailure] = useState(false);
   const [loading, setLoading] = useState(false);
 
+  const getTotal = (total) => setTotal(total);
+  const setTotalPages = (pages) => setPageNumbers(pages);
+  const successStatus = (value) => setSuccess(value);
+  const failureStatus = (value) => setFailure(value);
+  const newStudentModal = (value) => setNewModal(value);
+  const loadingStatus = (value) => setLoading(value);
+  const setDetails = (details) => setData(details);
+  const getDepartments = (items) => setDepartments(items);
+
   const registerStudent = async (e) => {
     e.preventDefault();
-    const data = {
-      firstname: firstname,
-      lastname: lastname,
-      email: email,
-      dateofbirth: dateofbirth,
-      nationality: nationality,
-      departmentid: selectedID,
-      password: password,
-      title: "student",
-    };
-
-    try {
-      const res = await authAxios.post(`/student/register`, data, {
-        withCredentials: true,
-      });
-      let response = [];
-
-      if (!res) {
-        const secondRes = await axios.post(
-          `${process.env.REACT_APP_API_URL}/student/register`,
-          data,
-          {
-            headers: { Authorization: `Bearer ${Cookies.get("accessToken")}` },
-            withCredentials: true,
-          }
-        );
-        response = await secondRes.data;
-      } else {
-        response = await res.data;
-      }
-
-      console.log("New student added=> ", response);
-      setNewModal(false);
-      setSuccess(true);
-      setTimeout(() => {
-        setSuccess(false);
-      }, 5000);
-    } catch (error) {
-      console.log(error);
-      setNewModal(false);
-      setFailure(true);
-      setTimeout(() => {
-        setFailure(false);
-      }, 10000);
-    }
+    NewStudent(firstname, lastname, email, dateofbirth, nationality, selectedID, password, newStudentModal, successStatus, failureStatus);
   };
 
-  const getTotal = async () => {
-    try {
-      const res = await authAxios.get(`/student`, { withCredentials: true });
-      let students = [];
-
-      if (!res) {
-        const secondRes = await axios.get(
-          `${process.env.REACT_APP_API_URL}/student`,
-          {
-            headers: { Authorization: `Bearer ${Cookies.get("accessToken")}` },
-            withCredentials: true,
-          }
-        );
-        students = secondRes.data;
-      } else {
-        students = res.data;
-      }
-      setTotal(students.count);
-      getPages(students.count);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const getPages = (totalItem) => {
-    const pages = [];
-    for (let i = 1; i <= Math.ceil(totalItem / perPage); i++) {
-      pages.push(i);
-    }
-    setPageNumbers(pages);
-  };
-
-  const changePage = (value) => {
-    setCurrentPage(value);
-  };
-
-  const fetchData = async () => {
-    setLoading(true);
-    try {
-      const skip = currentPage * perPage - perPage;
-      const res = await authAxios.get(
-        `/student?limit=${perPage}&offset=${skip}`,
-        { withCredentials: true }
-      );
-      let allStudents = [];
-
-      if (!res) {
-        const secondRes = await axios.get(
-          `${process.env.REACT_APP_API_URL}/student?limit=${perPage}&offset=${skip}`,
-          {
-            headers: { Authorization: `Bearer ${Cookies.get("accessToken")}` },
-            withCredentials: true,
-          }
-        );
-        allStudents = secondRes.data;
-      } else {
-        allStudents = res.data;
-      }
-
-      setData(allStudents.data);
-      setLoading(false);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const getDepartments = async () => {
-    try {
-      const response = await authAxios.get(`/departments`, {
-        withCredentials: true,
-      });
-      let allDepartments = [];
-
-      if (!response) {
-        const secondResponse = await axios.get(
-          `${process.env.REACT_APP_API_URL}/departments`,
-          {
-            headers: { Authorization: `Bearer ${Cookies.get("accessToken")}` },
-            withCredentials: true,
-          }
-        );
-        allDepartments = secondResponse.data;
-      } else {
-        allDepartments = response.data;
-      }
-
-      setDepartments(allDepartments.data);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
+  const changePage = (value) => setCurrentPage(value);
   const getSelectedID = (e) => setSelectedID(e.target.value);
 
   useEffect(() => {
-    getTotal();
-    getDepartments();
-    fetchData();
+    TotalStudents(userTitle, getTotal, perPage, setTotalPages);
+    DepartmentsDetails(getDepartments);
+    StudentsDetails(loadingStatus, currentPage, perPage, setDetails);
   }, [success, currentPage]);
 
   return (

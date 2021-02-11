@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React from "react";
 import {
   Accordion,
   Button,
@@ -8,16 +8,13 @@ import {
   Card,
   Image,
 } from "react-bootstrap";
-import { useAccordionToggle } from "react-bootstrap/AccordionToggle";
-import AccordionContext from "react-bootstrap/AccordionContext";
-import StudentProfile from "./Profile";
+import Profile from "../common/Profile";
 import AllCourses from "./Courses";
 import MyCourses from "./Registered";
 import ExamsGrades from "./ExamsGrades";
-import "../allrouteStyle/style.scss";
+import "../commonStyle/style.scss";
 import { format } from "date-fns";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faAngleUp, faAngleDown } from "@fortawesome/free-solid-svg-icons";
+import CustomToggle from "../common/CustomToggle";
 
 const StudentDetail = ({
   userTitle,
@@ -28,39 +25,6 @@ const StudentDetail = ({
 }) => {
   const updateUser = (newInfo) => updateUserInfo(newInfo);
   const getData = (newData) => updateData(newData);
-
-  function CustomToggle({ children, eventKey, callback }) {
-    const currentEventKey = useContext(AccordionContext);
-
-    const decoratedOnClick = useAccordionToggle(
-      eventKey,
-      () => callback && callback(eventKey)
-    );
-
-    const isCurrentEventKey = currentEventKey === eventKey;
-
-    return (
-      <div
-        onClick={decoratedOnClick}
-        style={{
-          cursor: "pointer",
-          display: "flex",
-          justifyContent: "space-between",
-          color: "white",
-          fontSize: "1rem",
-          fontWeight: "900",
-          padding: "0.5rem 1rem",
-          fontFamily: "sans-serif",
-        }}
-      >
-        {children}
-        <FontAwesomeIcon
-          style={{ height: "auto" }}
-          icon={isCurrentEventKey ? faAngleUp : faAngleDown}
-        />
-      </div>
-    );
-  }
 
   return (
     <>
@@ -146,7 +110,7 @@ const StudentDetail = ({
                             </tr>
                           </tbody>
                         </Table>
-                        <StudentProfile
+                        <Profile
                           currentUser={currentUser}
                           updateUser={updateUser}
                           userTitle={userTitle}
@@ -164,6 +128,7 @@ const StudentDetail = ({
                       <AllCourses
                         userID={currentUser._id}
                         updateData={getData}
+                        userTitle={userTitle}
                       />
                     </Card.Body>
                   </Accordion.Collapse>
@@ -177,6 +142,7 @@ const StudentDetail = ({
                       <MyCourses
                         userID={currentUser._id}
                         updateData={userData}
+                        userTitle={userTitle}
                       />
                     </Card.Body>
                   </Accordion.Collapse>
@@ -190,6 +156,7 @@ const StudentDetail = ({
                       <ExamsGrades
                         userID={currentUser._id}
                         updateData={userData}
+                        userTitle={userTitle}
                       />
                     </Card.Body>
                   </Accordion.Collapse>

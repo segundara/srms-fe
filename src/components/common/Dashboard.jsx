@@ -1,6 +1,6 @@
 import React from "react";
 import { Container } from "react-bootstrap";
-import "./allrouteStyle/style.scss";
+import "../commonStyle/style.scss";
 import UserData from "./UserPage";
 
 const Dashboard = (props) => {

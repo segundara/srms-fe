@@ -3,6 +3,34 @@
 
 $mynewcolor: #504c8a;
 
+.jumbo {
+  margin-top: 0px;
+  padding-top: 0px;
+  background-image: url("/welcome.png");
+  background-size: cover;
+  background-position: center;
+  height: 100vh;
+  font-family: "Noto Sans TC", sans-serif;
+  font-size: 2.2rem;
+  width: 100%;
+}
+
+.nav-container{
+  background: rgb(108,99,255);
+  background: linear-gradient(90deg, rgba(108,99,255,1) 0%, rgba(92,33,203,1) 100%);
+}
+.nav{
+  max-width: 1125px;
+  margin: auto;
+}
+.appLink{
+  background: #6c63ff;
+  border-radius: 5px;
+}
+.appLink > a {
+  color: #fff !important;
+}
+
 .btn-primary {
   @include button-variant(
     $mynewcolor,

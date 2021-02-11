@@ -1,7 +1,4 @@
 import React, { useState, useEffect } from "react";
-import authAxios from "../../lib/http";
-import Cookies from "js-cookie";
-import axios from "axios";
 import {
   Row,
   Col,
@@ -12,16 +9,17 @@ import {
   Button,
   Modal,
   Form,
-  ToggleButton,
-  ToggleButtonGroup,
   Alert,
   Spinner,
 } from "react-bootstrap";
-import "../allrouteStyle/style.scss";
+import "../commonStyle/style.scss";
 import { format } from "date-fns";
 import Pagination from "react-bootstrap-4-pagination";
+import TotalStudentsByExam from "./FetchTotalStudentsByExam";
+import GradingService from "./GradingService";
+import ExamsRecords from "./FetchExamsRecords";
 
-function ExamsGrades({ userID }) {
+function ExamsGrades({ userID, userTitle }) {
   const [data, setData] = useState([]);
   const [grade, setGrade] = useState("");
   const [gradeModal, setGradeModal] = useState(false);
@@ -33,170 +31,22 @@ function ExamsGrades({ userID }) {
   const [pageNumbers, setPageNumbers] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  const getTotal = async () => {
-    const courses = await getCourses();
-    let totalStudent = [];
-    if (courses) {
-      for (const course of courses) {
-        let student = [];
-        try {
-          const res = await authAxios.get(`/exams/student_list/${course._id}`, {
-            withCredentials: true,
-          });
-
-          if (!res) {
-            const secondRes = await axios.get(
-              `${process.env.REACT_APP_API_URL}/exams/student_list/${course._id}`,
-              {
-                headers: {
-                  Authorization: `Bearer ${Cookies.get("accessToken")}`,
-                },
-                withCredentials: true,
-              }
-            );
-            student = secondRes.data;
-          } else {
-            student = res.data;
-          }
-          totalStudent.push(student.count);
-        } catch (error) {
-          console.log(error);
-        }
-      }
-    }
-    setTotalArr(totalStudent);
-    getPages(totalStudent);
-  };
-
-  const getPages = (totalItem) => {
-    const pages = [];
-    for (let i = 0; i < totalItem.length; i++) {
-      const element = totalItem[i];
-      let innerPages = [];
-      for (let j = 1; j <= Math.ceil(element / perPage); j++) {
-        innerPages.push(j);
-      }
-      pages.push(innerPages);
-    }
-    setPageNumbers(pages);
-  };
-
+  const setTotalStudent = (items) => setTotalArr(items);
+  const setTotalPages = (pages) => setPageNumbers(pages);
+  const openGradeModal = (value) => setGradeModal(value);
+  const loadingStatus = (value) => setLoading(value);
   const changePage = (value) => setCurrentPage(value);
+  const getRecords = (records) => setData(records);
 
   const updateGrade = async (e) => {
     e.preventDefault();
-    console.log("examid: ", examid, "studentid: ", studentid);
-    const data = {
-      grade: grade,
-    };
-
-    try {
-      const res = await authAxios.put(`/exams/${studentid}/${examid}`, data, {
-        withCredentials: true,
-      });
-
-      let response = [];
-
-      if (!res) {
-        const secondRes = await axios.put(
-          `${process.env.REACT_APP_API_URL}/exams/${studentid}/${examid}`,
-          data,
-          {
-            headers: {
-              Authorization: `Bearer ${Cookies.get("accessToken")}`,
-            },
-            withCredentials: true,
-          }
-        );
-        response = secondRes.data;
-      } else {
-        response = res.data;
-      }
-
-      console.log("response from gradeUpdate=>", response);
-
-      setGradeModal(false);
-    } catch (err) {
-      if (err.response.status === 500) {
-        console.log("There was a problem with the server");
-      } else {
-        console.log(err.response.data.msg);
-      }
-      setGradeModal(false);
-    }
-  };
-
-  const getCourses = async () => {
-    try {
-      const res = await authAxios.get(`/courses/${userID}`, {
-        withCredentials: true,
-      });
-      let allCourses = [];
-
-      if (!res) {
-        const secondRes = await axios.get(
-          `${process.env.REACT_APP_API_URL}/courses/${userID}`,
-          {
-            headers: { Authorization: `Bearer ${Cookies.get("accessToken")}` },
-            withCredentials: true,
-          }
-        );
-        allCourses = secondRes.data;
-      } else {
-        allCourses = res.data;
-      }
-      return allCourses;
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const getExamsRecords = async () => {
-    setLoading(true);
-    let allStudents = [];
-    const courses = await getCourses();
-    if (courses) {
-      for (const course of courses) {
-        let student = [];
-        let eachRecord = {};
-        try {
-          const skip = currentPage * perPage - perPage;
-          const res = await authAxios.get(
-            `/exams/student_list/${course._id}?limit=${perPage}&offset=${skip}`,
-            { withCredentials: true }
-          );
-
-          if (!res) {
-            const secondRes = await axios.get(
-              `${process.env.REACT_APP_API_URL}/exams/student_list/${course._id}?limit=${perPage}&offset=${skip}`,
-              {
-                headers: {
-                  Authorization: `Bearer ${Cookies.get("accessToken")}`,
-                },
-                withCredentials: true,
-              }
-            );
-            student = secondRes.data;
-          } else {
-            student = res.data;
-          }
-          eachRecord.name = course.name;
-          eachRecord.students = student.data;
-          console.log(student);
-          allStudents.push(eachRecord);
-        } catch (error) {
-          console.log(error);
-        }
-      }
-      setData(allStudents);
-    }
-    setLoading(false);
+    GradingService(grade, studentid, examid, openGradeModal)
   };
 
   useEffect(() => {
-    getTotal();
-    getExamsRecords();
-  }, [gradeModal, currentPage]);
+    TotalStudentsByExam(userID, perPage, setTotalStudent, setTotalPages, userTitle);
+    ExamsRecords(userID, currentPage, perPage, getRecords, loadingStatus);
+  }, [gradeModal, currentPage, perPage, userID, userTitle]);
 
   console.log(data);
   return (

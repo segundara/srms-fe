@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import axios from "axios";
 import Cookies from "js-cookie"
-import authAxios from "../lib/http"
+import authAxios from "../../lib/http"
 import { withRouter } from 'react-router-dom';
 
 const Logout = (props) => {

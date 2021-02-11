@@ -1,8 +1,5 @@
 import React, { useState, useEffect } from "react";
-import authAxios from "../../lib/http";
-import Cookies from "js-cookie";
-import axios from "axios";
-import "../allrouteStyle/style.scss";
+import "../commonStyle/style.scss";
 import {
   Table,
   Button,
@@ -10,17 +7,16 @@ import {
   Modal,
   Row,
   Col,
-  ButtonGroup,
-  DropdownButton,
-  Dropdown,
   Alert,
-  ToggleButtonGroup,
-  ToggleButton,
   Spinner,
 } from "react-bootstrap";
 import Pagination from "react-bootstrap-4-pagination";
+import DepartmentsDetails from "./FetchDepartmentsDetails";
+import TotalTutors from "./FetchTotalTutors";
+import TutorsDetails from "./FetchTutorsDetails";
+import NewTutor from "./NewTutorHandler";
 
-const TutorList = () => {
+const TutorList = ({ userTitle }) => {
   const [data, setData] = useState(null);
   const [newModal, setNewModal] = useState(false);
   const [firstname, setFirstname] = useState("");
@@ -38,152 +34,27 @@ const TutorList = () => {
   const [failure, setFailure] = useState(false);
   const [loading, setLoading] = useState(false);
 
+  const getTotal = (total) => setTotal(total);
+  const setTotalPages = (pages) => setPageNumbers(pages);
+  const successStatus = (value) => setSuccess(value);
+  const failureStatus = (value) => setFailure(value);
+  const newTutorModal = (value) => setNewModal(value);
+  const loadingStatus = (value) => setLoading(value);
+  const setDetails = (details) => setData(details);
+  const getDepartments = (items) => setDepartments(items);
+
   const registerTutor = async (e) => {
     e.preventDefault();
-    const data = {
-      firstname: firstname,
-      lastname: lastname,
-      email: email,
-      departmentid: selectedID,
-      password: password,
-      title: "tutor",
-    };
-
-    try {
-      const res = await authAxios.post(`/tutor/register`, data, {
-        withCredentials: true,
-      });
-      let response = [];
-
-      if (!res) {
-        const secondRes = await axios.post(
-          `${process.env.REACT_APP_API_URL}/tutor/register`,
-          data,
-          {
-            headers: { Authorization: `Bearer ${Cookies.get("accessToken")}` },
-            withCredentials: true,
-          }
-        );
-        response = await secondRes.data;
-      } else {
-        response = await res.data;
-      }
-
-      console.log("New tutor added=> ", response);
-      setNewModal(false);
-      setSuccess(true);
-      setTimeout(() => {
-        setSuccess(false);
-      }, 5000);
-    } catch (error) {
-      console.log(error);
-      setNewModal(false);
-      setFailure(true);
-      setTimeout(() => {
-        setFailure(false);
-      }, 10000);
-    }
+    NewTutor(firstname, lastname, email, selectedID, password, newTutorModal, successStatus, failureStatus)
   };
 
-  const getTotal = async () => {
-    try {
-      const res = await authAxios.get(`/tutor`, { withCredentials: true });
-      let tutors = [];
-
-      if (!res) {
-        const secondRes = await axios.get(
-          `${process.env.REACT_APP_API_URL}/tutor`,
-          {
-            headers: { Authorization: `Bearer ${Cookies.get("accessToken")}` },
-            withCredentials: true,
-          }
-        );
-        tutors = secondRes.data;
-      } else {
-        tutors = res.data;
-      }
-      setTotal(tutors.count);
-      getPages(tutors.count);
-      setLoading(false);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const getPages = (totalItem) => {
-    const pages = [];
-    for (let i = 1; i <= Math.ceil(totalItem / perPage); i++) {
-      pages.push(i);
-    }
-    setPageNumbers(pages);
-  };
-
-  const changePage = (value) => {
-    setCurrentPage(value);
-  };
-
-  const fetchData = async () => {
-    setLoading(true);
-    try {
-      const skip = currentPage * perPage - perPage;
-      const res = await authAxios.get(
-        `/tutor?limit=${perPage}&offset=${skip}`,
-        { withCredentials: true }
-      );
-      let allTutors = [];
-
-      if (!res) {
-        const secondRes = await axios.get(
-          `${process.env.REACT_APP_API_URL}/tutor?limit=${perPage}&offset=${skip}`,
-          {
-            headers: { Authorization: `Bearer ${Cookies.get("accessToken")}` },
-            withCredentials: true,
-          }
-        );
-        allTutors = secondRes.data;
-      } else {
-        allTutors = res.data;
-      }
-
-      setData(allTutors.data);
-      setLoading(false);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const getDepartments = async () => {
-    try {
-      const response = await authAxios.get(`/departments`, {
-        withCredentials: true,
-      });
-      let allDepartments = [];
-
-      if (!response) {
-        const secondResponse = await axios.get(
-          `${process.env.REACT_APP_API_URL}/departments`,
-          {
-            headers: { Authorization: `Bearer ${Cookies.get("accessToken")}` },
-            withCredentials: true,
-          }
-        );
-        allDepartments = secondResponse.data;
-      } else {
-        allDepartments = response.data;
-      }
-
-      setDepartments(allDepartments.data);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
+  const changePage = (value) => setCurrentPage(value);
   const getSelectedID = (e) => setSelectedID(e.target.value);
 
   useEffect(() => {
-    getTotal();
-    getDepartments();
-    fetchData();
+    TotalTutors(userTitle, getTotal, perPage, setTotalPages);
+    DepartmentsDetails(getDepartments);
+    TutorsDetails(loadingStatus, currentPage, perPage, setDetails);
   }, [success, currentPage]);
 
   return (

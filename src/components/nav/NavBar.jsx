@@ -1,7 +1,7 @@
 import React from 'react';
 import { Navbar, Nav, NavItem, NavLink } from 'react-bootstrap';
 import { Link, withRouter } from 'react-router-dom';
-import "./style.scss";
+import "../commonStyle/style.scss";
 
 const NavBar = (props) => {
 

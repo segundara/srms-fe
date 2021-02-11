@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import authAxios from "../lib/http"
+import authAxios from "../../lib/http"
 import Cookies from "js-cookie"
 import axios from "axios"
-import "./allrouteStyle/style.scss";
-import StudentDetail from './student/Student';
-import TutorDetail from './tutor/Tutor';
-import AdminDetail from './admin/Admin';
+import "../commonStyle/style.scss";
+import StudentDetail from '../student/Student';
+import TutorDetail from '../tutor/Tutor';
+import AdminDetail from '../admin/Admin';
 
 const UserData = ({ userTitle }) => {
     const [currentUser, setCurrentUser] = useState('');
