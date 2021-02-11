@@ -4,7 +4,7 @@ import { Container } from "react-bootstrap";
 import NavBar from "./components/nav/NavBar";
 import WelcomePage from "./components/welcome/Welcome"
 import { BrowserRouter as Router, Route, Redirect, Switch } from 'react-router-dom';
-import Login from "./components/login/login"
+import Login from "./components/login/Login"
 import Logout from './components/logout/Logout';
 import Dashboard from './components/common/Dashboard';
 
