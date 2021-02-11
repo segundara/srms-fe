@@ -4,8 +4,6 @@
 $mynewcolor: #504c8a;
 
 .jumbo {
-  margin-top: 0px;
-  padding-top: 0px;
   background-image: url("/welcome.png");
   background-size: cover;
   background-position: center;
@@ -13,6 +11,10 @@ $mynewcolor: #504c8a;
   font-family: "Noto Sans TC", sans-serif;
   font-size: 2.2rem;
   width: 100%;
+}
+
+.jumbo>div{
+  padding-top: 8%;
 }
 
 .nav-container{
