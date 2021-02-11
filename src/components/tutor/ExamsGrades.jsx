@@ -136,11 +136,11 @@ function ExamsGrades({ userID, userTitle }) {
                                       <td className="text-center">
                                         <Button
                                           variant="secondary"
-                                          onClick={() => (
-                                            setGradeModal(true),
-                                            setExamid(s._id),
-                                            setStudentid(s.studentid)
-                                          )}
+                                          onClick={() => {
+                                            setGradeModal(true);
+                                            setExamid(s._id);
+                                            setStudentid(s.studentid);
+                                          }}
                                         >
                                           Add
                                         </Button>

@@ -10,7 +10,6 @@ import AdminDetail from '../admin/Admin';
 const UserData = ({ userTitle }) => {
     const [currentUser, setCurrentUser] = useState('');
     const [userData, setUserData] = useState('');
-    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -29,8 +28,6 @@ const UserData = ({ userTitle }) => {
                 }
 
                 setCurrentUser(currentUser)
-                setLoading(false)
-                console.log(currentUser)
 
             } catch (error) {
                 console.log(error)
@@ -38,7 +35,7 @@ const UserData = ({ userTitle }) => {
 
         }
         fetchData();
-    }, []);
+    }, [userTitle]);
 
     const updateUser = (newInfo) => { setCurrentUser(newInfo) }
     const updateData = (newData) => { setUserData(newData) }

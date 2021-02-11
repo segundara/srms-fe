@@ -13,7 +13,6 @@ import RecordsPDF from "./PdfHandler";
 
 const ExamsGrades = ({ userID, updateData, userTitle }) => {
   const [data, setData] = useState([]);
-  const [total, setTotal] = useState(null);
   const [perPage, setPerPage] = useState(2);
   const [currentPage, setCurrentPage] = useState(1);
   const [pageNumbers, setPageNumbers] = useState([]);
@@ -21,7 +20,6 @@ const ExamsGrades = ({ userID, updateData, userTitle }) => {
   const [failure, setFailure] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const getTotal = (total) => setTotal(total);
   const setTotalPages = (pages) => setPageNumbers(pages);
   const successStatus = (value) => setSuccess(value);
   const failureStatus = (value) => setFailure(value);
@@ -35,7 +33,7 @@ const ExamsGrades = ({ userID, updateData, userTitle }) => {
   };
 
   useEffect(() => {
-    TotalExams(userID, userTitle, getTotal, perPage, setTotalPages);
+    TotalExams(userID, userTitle, perPage, setTotalPages);
     ExamsDetails(loadingStatus, currentPage, perPage, setDetails, userID);
   }, [updateData, currentPage, perPage, userID, userTitle]);
 

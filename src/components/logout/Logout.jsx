@@ -34,7 +34,7 @@ const Logout = (props) => {
 
         }
         logout()
-    }, [])
+    }, [props.history])
 
     return (
         <div className="text-center qoute">

@@ -61,7 +61,7 @@ const Login = (props) => {
     <div className="base-container">
       <div className="content">
         <div className="image">
-          <img src={loginImg} />
+          <img src={loginImg} alt="" />
         </div>
         <div className="form">
           <div className="form-group">

@@ -11,13 +11,11 @@ import MyCourseList from "./FetchMyCourseList";
 
 const MyCourses = ({ userID, updateData, userTitle }) => {
   const [data, setData] = useState([]);
-  const [total, setTotal] = useState(null);
   const [perPage, setPerPage] = useState(2);
   const [currentPage, setCurrentPage] = useState(1);
   const [pageNumbers, setPageNumbers] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  const getTotal = (total) => setTotal(total);
   const setTotalPages = (pages) => setPageNumbers(pages);
   const loadingStatus = (value) => setLoading(value);
   const setDetails = (details) => setData(details);
@@ -25,9 +23,9 @@ const MyCourses = ({ userID, updateData, userTitle }) => {
   const changePage = (value) => setCurrentPage(value);
 
   useEffect(() => {
-    TotalRegisteredCourses(userID, userTitle, getTotal, perPage, setTotalPages);
+    TotalRegisteredCourses(userID, userTitle, perPage, setTotalPages);
     MyCourseList(loadingStatus, currentPage, perPage, setDetails, userID);
-  }, [updateData, currentPage]);
+  }, [updateData, currentPage, perPage, userTitle, userID]);
 
   return (
     <div>

@@ -54,7 +54,7 @@ const StudentList = ({ userID, userTitle }) => {
   useEffect(() => {
     TotalStudentsBycourse(userID, perPage, setTotalStudent, setTotalPages, userTitle);
     MyStudents(userID, currentPage, perPage, getStudents, loadingStatus);
-  }, [currentPage, perPage, userID]);
+  }, [currentPage, perPage, userID, userTitle]);
 
   console.log(data.length, data);
   return (
@@ -146,12 +146,12 @@ const StudentList = ({ userID, userTitle }) => {
                                         <td className="text-center">
                                           <Button
                                             variant="secondary"
-                                            onClick={() => (
-                                              setEmailModal(true),
-                                              setRecipientEmail(s.email),
-                                              setRecipientFirstName(s.firstname),
-                                              setRecipientLastName(s.lastname)
-                                            )}
+                                            onClick={() => {
+                                              setEmailModal(true);
+                                              setRecipientEmail(s.email);
+                                              setRecipientFirstName(s.firstname);
+                                              setRecipientLastName(s.lastname);
+                                            }}
                                           >
                                             <FontAwesomeIcon icon={faEnvelope} />
                                           </Button>

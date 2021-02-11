@@ -17,13 +17,10 @@ const AllCourses = ({ userID, updateData, userTitle }) => {
   const [data, setData] = useState(null);
   const [success, setSuccess] = useState(false);
   const [failure, setFailure] = useState(false);
-  const [total, setTotal] = useState(null);
   const [perPage, setPerPage] = useState(2);
   const [currentPage, setCurrentPage] = useState(1);
   const [pageNumbers, setPageNumbers] = useState([]);
   const [loading, setLoading] = useState(false);
-
-  const getTotal = (total) => setTotal(total);
 
   const setTotalPages = (pages) => setPageNumbers(pages);
   const dataUpdate = (data) => updateData(data);
@@ -39,9 +36,9 @@ const AllCourses = ({ userID, updateData, userTitle }) => {
   };
 
   useEffect(() => {
-    TotalCourses(userTitle, getTotal, perPage, setTotalPages);
+    TotalCourses(userTitle, perPage, setTotalPages);
     CoursesDetails(loadingStatus, currentPage, perPage, setDetails);
-  }, [currentPage]);
+  }, [currentPage, perPage, userTitle]);
 
   return (
     <>

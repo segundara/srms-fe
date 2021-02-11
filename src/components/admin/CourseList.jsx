@@ -25,9 +25,7 @@ const CourseList = ({ userTitle }) => {
   const [description, setDescription] = useState("");
   const [semester, setSemester] = useState("");
   const [examdate, setExamdate] = useState("");
-  const [selectedTutor, setSelectedTutor] = useState("");
   const [lecturerID, setLecturerID] = useState("");
-  const [total, setTotal] = useState(null);
   const [perPage, setPerPage] = useState(2);
   const [currentPage, setCurrentPage] = useState(1);
   const [pageNumbers, setPageNumbers] = useState([]);
@@ -35,7 +33,6 @@ const CourseList = ({ userTitle }) => {
   const [failure, setFailure] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const getTotal = (total) => setTotal(total);
   const setTotalPages = (pages) => setPageNumbers(pages);
   const successStatus = (value) => setSuccess(value);
   const failureStatus = (value) => setFailure(value);
@@ -53,10 +50,10 @@ const CourseList = ({ userTitle }) => {
   const getLecturerID = (e) => setLecturerID(e.target.value);
 
   useEffect(() => {
-    TotalCourses(userTitle, getTotal, perPage, setTotalPages);
+    TotalCourses(userTitle, perPage, setTotalPages);
     Tutors(getTutors);
     CoursesDetails(loadingStatus, currentPage, perPage, setDetails);
-  }, [success, currentPage]);
+  }, [success, currentPage, perPage, userTitle]);
 
   return (
     <>

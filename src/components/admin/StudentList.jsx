@@ -26,9 +26,7 @@ const StudentList = ({ userTitle }) => {
   const [nationality, setNationality] = useState("");
   const [password, setPassword] = useState("");
   const [departments, setDepartments] = useState([]);
-  const [selectedDept, setSelectedDept] = useState("");
   const [selectedID, setSelectedID] = useState("");
-  const [total, setTotal] = useState(null);
   const [perPage, setPerPage] = useState(2);
   const [currentPage, setCurrentPage] = useState(1);
   const [pageNumbers, setPageNumbers] = useState([]);
@@ -36,7 +34,6 @@ const StudentList = ({ userTitle }) => {
   const [failure, setFailure] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const getTotal = (total) => setTotal(total);
   const setTotalPages = (pages) => setPageNumbers(pages);
   const successStatus = (value) => setSuccess(value);
   const failureStatus = (value) => setFailure(value);
@@ -54,10 +51,10 @@ const StudentList = ({ userTitle }) => {
   const getSelectedID = (e) => setSelectedID(e.target.value);
 
   useEffect(() => {
-    TotalStudents(userTitle, getTotal, perPage, setTotalPages);
+    TotalStudents(userTitle, perPage, setTotalPages);
     DepartmentsDetails(getDepartments);
     StudentsDetails(loadingStatus, currentPage, perPage, setDetails);
-  }, [success, currentPage]);
+  }, [success, currentPage, perPage, userTitle]);
 
   return (
     <>
@@ -222,7 +219,6 @@ const StudentList = ({ userTitle }) => {
                         >
                           <option></option>
                           {departments.map((key, i) => {
-                            console.log(selectedDept);
                             return (
                               <option key={i} value={key._id}>
                                 {key.name}
