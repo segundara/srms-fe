@@ -3,7 +3,7 @@ import Cookies from "js-cookie";
 import axios from "axios";
 import Pages from "../common/Pages"
 
-const TotalExams = async (userID, userTitle, getTotal, perPage, setTotalPages) => {
+const TotalExams = async (userID, userTitle, perPage, setTotalPages) => {
     try {
         const res = await authAxios.get(`/exams/${userID}`, {
             withCredentials: true,
@@ -22,7 +22,7 @@ const TotalExams = async (userID, userTitle, getTotal, perPage, setTotalPages) =
         } else {
             exams = res.data;
         }
-        getTotal(exams.count);
+        // getTotal(exams.count);
         Pages(exams.count, perPage, setTotalPages, userTitle);
     } catch (error) {
         console.log(error);
