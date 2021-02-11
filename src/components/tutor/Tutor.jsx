@@ -9,7 +9,7 @@ import {
 } from "react-bootstrap";
 import Profile from "../common/Profile";
 import StudentList from "./MyStudentList";
-import ExamsGrades from "../tutor/ExamsGrades";
+import ExamsGrades from "./ExamsGrades";
 import "../commonStyle/style.scss";
 import CustomToggle from "../common/CustomToggle";
 
