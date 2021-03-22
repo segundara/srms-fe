@@ -6,7 +6,7 @@ const WelcomePage = () => {
     return (
         <Jumbotron className="jumbo d-flex">
             <div className="d-flex flex-column">
-                <span>Welcome to the School Portal.</span>
+                <span>Welcome to my SRS project.</span>
                 <span>Login details can be found in <a href="https://srms-be.herokuapp.com/api-docs">api-docs</a></span>
             </div>
         </Jumbotron>
