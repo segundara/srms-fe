@@ -7,7 +7,7 @@ const WelcomePage = () => {
         <Jumbotron className="jumbo d-flex">
             <div className="d-flex flex-column">
                 <span>Welcome to my SRS project.</span>
-                <span>Login details can be found in <a href="https://srms-be.herokuapp.com/api-docs">api-docs</a></span>
+                <span>Login details can be found in <a href="https://cloudy-blue-lion.cyclic.app/api-docs">api-docs</a></span>
             </div>
         </Jumbotron>
     )
